@@ -1,13 +1,16 @@
 // ==UserScript==
 // @name         iLearn Moonsault
 // @namespace    https://github.com/zoebogner/iLearn-Moonsault
-// @version      2026-05-14.1
+// @version      2026-05-14.2
 // @description  Tools and shortcuts for iLearn Agency Admins
 // @author       Zoe Bogner
 // @match        *://ilearn.sahealth.sa.gov.au/*
 // @match        *://ilearnext.sahealth.sa.gov.au/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tampermonkey.net
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/zoebogner/iLearn-Moonsault/refs/heads/main/tampermonkey_ilearnmoonsault.js
+// @downloadURL  https://raw.githubusercontent.com/zoebogner/iLearn-Moonsault/refs/heads/main/tampermonkey_ilearnmoonsault.js
+// @run-at       document-start
 // ==/UserScript==
 
 (function() {
