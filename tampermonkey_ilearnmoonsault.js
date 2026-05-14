@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         iLearn Moonsault
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/zoebogner/iLearn-Moonsault
 // @version      2026-05-14.1
 // @description  Tools and shortcuts for iLearn Agency Admins
 // @author       Zoe Bogner
