@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         iLearn Moonsault
 // @namespace    https://github.com/zoebogner/iLearn-Moonsault
-// @version      2026-07-06.1
+// @version      2026-07-06.2
 // @description  Tools and shortcuts for iLearn Agency Admins
 // @author       Zoe Bogner
 // @match        *://ilearn.sahealth.sa.gov.au/*
@@ -16,10 +16,7 @@
 (function() {
     'use strict';
 
-    /**
-     * Styling for the 'Course Completion Detail' menu item.
-     * Reduces prominence by using a neutral grey background and muted text.
-     */
+    /** Styling to reduce promenence of the 'Course Completion Detail' menu item. */
     const style = document.createElement('style');
     style.innerHTML = `
         #ctl00_ucAdminNavBar_rptParentNodes_ctl16_rptChildNodes_ctl02_lbtnChildNode {
@@ -33,6 +30,7 @@
     `;
     document.head.appendChild(style);
 
+    /** Add useful training plan, profile, registration links */
     function getUserIdFromUrl() {
         const params = new URLSearchParams(window.location.search);
         return params.get('uid') || params.get('userid');
