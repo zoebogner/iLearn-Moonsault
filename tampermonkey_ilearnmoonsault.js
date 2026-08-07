@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         iLearn Moonsault
 // @namespace    https://github.com/zoebogner/iLearn-Moonsault
-// @version      2026-07-06.2
+// @version      2026-08-07.0
 // @description  Tools and shortcuts for iLearn Agency Admins
 // @author       Zoe Bogner
 // @match        *://ilearn.sahealth.sa.gov.au/*
@@ -112,4 +112,89 @@
         subtree: true,
     });
 
+    
+    /** Rename report downloads to include their report type and datestamp */
+    
+    const downloadBtn = document.querySelector('#ctl00_cphDefaultContent_btnDownload');
+    const reportNameLabel = document.querySelector('#ctl00_cphDefaultContent_lblReportName');
+
+    if (!downloadBtn || !reportNameLabel) {
+        return;
+    }
+
+    function getDateStamp() {
+        const d = new Date();
+        return (
+            d.getFullYear().toString() +
+            String(d.getMonth() + 1).padStart(2, '0') +
+            String(d.getDate()).padStart(2, '0')
+        );
+    }
+
+    function sanitiseFilename(name) {
+        return name
+            .replace(/[<>:"/\\|?*]+/g, '')
+            .replace(/\s+/g, '_')
+            .trim();
+    }
+
+    downloadBtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        try {
+            const reportName = sanitiseFilename(reportNameLabel.textContent);
+
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+
+            formData.set(
+                'ctl00$cphDefaultContent$btnDownload',
+                'Download'
+            );
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            let extension = 'xlsx';
+
+            const disposition = response.headers.get('content-disposition');
+            if (disposition) {
+                const match = disposition.match(/filename="?([^"]+)"?/i);
+                if (match) {
+                    const originalName = match[1];
+                    const extMatch = originalName.match(/\.([^.]+)$/);
+                    if (extMatch) {
+                        extension = extMatch[1];
+                    }
+                }
+            }
+
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+
+            const filename =
+                `${reportName}_${getDateStamp()}.${extension}`;
+
+            GM_download({
+                url: blobUrl,
+                name: filename,
+                saveAs: false
+            });
+
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+
+        } catch (err) {
+            console.error('Failed to rename download:', err);
+
+            // Fallback to normal behaviour
+            HTMLInputElement.prototype.click.call(downloadBtn);
+        }
+    }, true);
 })();
